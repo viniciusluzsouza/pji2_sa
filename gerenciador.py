@@ -1,5 +1,6 @@
 from threading import Thread, Lock, Event
 from mensagens_auditor import *
+from gerente_db import GerenteDB
 
 solicita_gerente = Event()
 gerente_msg_lock = Lock()
@@ -9,7 +10,12 @@ class Gerenciador(Thread):
 	"""Gerenciador do SA. Trata mensagens vindas de qualquer lugar."""
 
 	def __init__(self):
+		# Inicializa o banco de dados
+		self.gerente_db = GerenteDB()
+		self.gerente_db.cria_db()
+
 		super(Gerenciador, self).__init__()
+
 
 	def run(self):
 		global solicita_gerente, gerente_msg_lock, gerente_msg
