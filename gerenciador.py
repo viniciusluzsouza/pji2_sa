@@ -5,12 +5,16 @@ from transmissor import *
 from receptor import *
 from copy import deepcopy
 import compartilhados
+from status import *
 
 class Gerenciador():
 	"""Gerenciador do SA. Trata mensagens vindas de qualquer lugar."""
 
-	def __init__(self):
+	def __init__(self, status):
 		compartilhados.init()
+
+		# Inicializa classe compartilhada com UI
+		self.status = status
 
 		# Inicializa o banco de dados
 		self.gerente_db = GerenteDB()
@@ -48,9 +52,10 @@ class Gerenciador():
 			compartilhados.transmitir_msg = msg
 			compartilhados.transmitir_event.set()
 
+
+
 	def init_thread_rede(self):
 		def gerencia_msg_rede():
-
 			while True:
 				# Espera alguma mensagem ...
 				compartilhados.solicita_gerente.wait()
@@ -71,21 +76,35 @@ class Gerenciador():
 					if '_dir' in msg and msg['_dir'] == 'ss':
 						print("Recebi msg do SS: ")
 						print("%s \n" % str(msg))
+
+						# Quando o Robo diz que está indo para tal lugar
+						# Implica-se que ele verificou a possibilidade dessa movimentacao
 						if cmd == MsgSStoSA.MovendoPara:
+							self.status.atualizarRobo(msg['robo'], msg['x'], msg['y'])
 							# Avisa interface usuario
-							print("OK, funcionando ...")
-							pass
 
 						elif cmd == MsgSStoSA.PosicaoAtual:
-							# Avisa interface usuario
-							pass
+							robo = msg['robo']
+							x = msg['x']
+							y = msg['y']
+							if self.status.getCoordRobo(robo) == x and self.status.getCoordRobo(robo) == y:
+								# O robo está onde ele diz estar
+								pass
+							else:
+								self.status.atualizarPosicaoRobo(robo, x, y)
+								#Avisa interface usuario
+								#algum codigo compartilhado
+
 
 						elif cmd == MsgSStoSA.ValidaCaca:
 							# Teste: valida tudo
-							print("Recebido valida caca. Validando ...")
-							msg = {"cmd": MsgSAtoSS.ValidacaoCaca, "ack": 1, "robo": msg['robo']}
-							self._envia_msg_ss(msg)
-							pass
+							self.status.atualizarCacas(msg['robo'], msg['x'], msg['y'])
+							if len(self.status.getCacas()) > 0:
+								# Jogo segue, avisa a ui
+								pass
+							else:
+								# Teve um vencedor, avisa a ui
+								pass
 
 						elif cmd == MsgSStoSA.ObstaculoEncontrado:
 							# Avisa interface usuario
@@ -140,6 +159,12 @@ class Gerenciador():
 		return
 
 
+
+if __name__ == '__main__':
+	print("Inicializando ...")
+	status = Status()
+	gerente = Gerenciador(status)
+	gerente.init_thread_rede()
 '''
 ### TESTE:
 if __name__ == '__main__':
