@@ -19,6 +19,9 @@ class Status:
         # Lista de cacas do jogo
         self.cacas = []
 
+        # Recupera dados do DB
+        self.dados_DB = []
+
     # Configuração do status da partida após definir quem será os jogadores
     # e suas coordenadas iniciais
     def definirPartida(self, nome_roboA, aX, aY, nome_roboB, bX, bY, listaCacas):
@@ -45,7 +48,7 @@ class Status:
         return True
 
     def atualizarCacaRobo(self, robo, caca):
-        if self._validarRobo(robo): return False
+        if not self._validarRobo(robo): return False
         if self.r1 == robo:
             self.r1_cacasEncontradas.append(caca)
         else:
@@ -57,7 +60,7 @@ class Status:
 
     # Retorna uma tupla contendo x e y
     def getCoordRobo(self, robo):
-        if self._validarRobo(robo): return False
+        if not self._validarRobo(robo): return False
         if robo == self.r1:
             return self.coord_r1.getX(), self.coord_r1.getY()
         else:
@@ -69,11 +72,12 @@ class Status:
     def getRoboB(self):
         return self.r2
 
-    def getCacaRoboA(self):
-        return self.r1_cacasEncontradas
-
-    def getCacaRoboB(self):
-        return self.r2_cacasEncontradas
+    def getCacaRobo(self, robo):
+        if not self._validarRobo(robo): return False
+        if robo == self.r1:
+            return self.r1_cacasEncontradas
+        else:
+            return self.r2_cacasEncontradas
 
     # Atualizar caças é chamado no momento em que um robo solicita validar sua caça
     # Este metodo verifica a caça e se ela for valida, ele deleta ela da lista
@@ -93,3 +97,9 @@ class Status:
             return self.r1
         else:
             return self.r2
+
+    def setDBtoStatus(self, dadosDB):
+        self.dados_DB = dadosDB
+
+    def getDBfromStatus(self):
+        return self.dados_DB
