@@ -6,6 +6,7 @@ from receptor import *
 from copy import deepcopy
 import compartilhados
 from status import *
+from interface_teste import *
 
 
 class Gerenciador():
@@ -28,6 +29,9 @@ class Gerenciador():
         # Inicializa receptor
         self.receptor = Receptor("localhost")
         self.receptor.start()
+
+        self.interface = Inter(status)
+        self.interface.start()
 
         super(Gerenciador, self).__init__()
 
@@ -58,7 +62,7 @@ class Gerenciador():
             while True:
                 # Espera alguma mensagem ...
 
-                print("Gerente ativo")
+                #print("Gerente ativo")
                 compartilhados.solicita_gerente.wait()
                 print("Executando gerente")
                 with compartilhados.gerente_msg_lock:
@@ -100,20 +104,11 @@ class Gerenciador():
 
 
                         elif cmd == MsgSStoSA.ValidaCaca:
-                            # Teste: valida tudo
-                            self.status.atualizarCacas(msg['_robo'], msg['x'], msg['y'])
+                            msg = {"cmd": MsgAuditorToUI.ValidarCaca, "_robo": msg['_robo'], 'x': msg['x'],
+                                   'y': msg['y']}
+                            self._envia_msg_ui(msg)
 
-                            # Ao validar a caça
-                            if len(self.status.getCacas()) > 0:
-                                # Jogo segue, avisa a ui
-                                msg = {"cmd": MsgAuditorToUI.ValidarCaca, "_robo": msg['_robo'], 'x': msg['x'],
-                                       'y': msg['y']}
-                                self._envia_msg_ui(msg)
-                            else:
-                                # Teve um vencedor, avisa a ui
-                                msg = {"cmd": MsgAuditorToUI.DeclararVencedor, "_robo": msg['_robo'], 'x': msg['x'],
-                                       'y': msg['y']}
-                                self._envia_msg_ui(msg)
+
 
                         elif cmd == MsgSStoSA.ObstaculoEncontrado:
                             msg = {"cmd": MsgAuditorToUI.Obstaculo, "_robo": msg['_robo']}
@@ -176,7 +171,31 @@ class Gerenciador():
                             self._envia_msg_ui(msg)
 
                         elif cmd == MsgUItoAuditor.ValidarCaca:
-                            msg = {"cmd": MsgSAtoSS.ValidacaoCaca, "_robo": msg['_robo']}
+                            if msg['validacao'] == 1:
+
+                                self.status.atualizarCacas(msg['_robo'], {'x': msg['x'], 'y': msg['y']})
+
+                                # Retira a caça encontrada pelo robo
+                                if len(self.status.getCacas()) > 0:
+                                    # Jogo segue, avisa a ui
+                                    msg = {"cmd": MsgSAtoSS.ValidacaoCaca, "_robo": msg['_robo'], 'x': msg['x'],
+                                           'y': msg['y'], 'ack': 1}
+                                    self._envia_msg_ss(msg)
+
+                                else:
+                                    # Teve um vencedor, avisa a ui
+                                    msg = {"cmd": MsgAuditorToUI.DeclararVencedor, "_robo": msg['_robo'], 'x': msg['x'],
+                                           'y': msg['y']}
+                                    self._envia_msg_ui(msg)
+                                    msg = {"cmd": MsgSAtoSS.ValidacaoCaca, "_robo": msg['_robo'], 'validacao': 1}
+                                    self._envia_msg_ss(msg)
+
+                            else:
+                                pass
+
+                        elif cmd == MsgUItoAuditor.NovoJogo:
+                            print("NOVO JOGO")
+                            msg['cmd'] = MsgSAtoSS.NovoJogo
                             self._envia_msg_ss(msg)
 
                         else:

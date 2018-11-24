@@ -36,8 +36,7 @@ class MsgAuditorErro(object):
 
 class MsgAuditorToUI(object):
 	"""docstring for MsgAuditorToUI"""
-	AtualizarR1 = 3001
-	AtualizarR2 = 3002
+	AtualizarRobo = 3001
 	ValidarCaca = 3003
 	Obstaculo = 3004
 	SolicitaID_REP = 3005
@@ -53,6 +52,7 @@ class MsgUItoAuditor(object):
 	CadastrarRobo = 4002
 	RecuperarCadastros = 4003
 	ValidarCaca = 4004
+	NovoJogo = 4005
 
 
 

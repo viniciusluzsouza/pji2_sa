@@ -19,6 +19,9 @@ class Status:
         # Lista de cacas do jogo
         self.cacas = []
 
+        self.vX = 0
+        self.vY = 0
+
         # Recupera dados do DB
         self.dados_DB = []
 
@@ -53,7 +56,11 @@ class Status:
             self.r1_cacasEncontradas.append(caca)
         else:
             self.r2_cacasEncontradas.append(caca)
-        return True
+
+        for i in range(len(self.cacas)):
+            if self.cacas[i]['x'] == caca['x'] and self.cacas[i]['y'] == caca['y']:
+                del self.cacas[i]
+                break
 
     def getCacas(self):
         return self.cacas
@@ -97,6 +104,15 @@ class Status:
             return self.r1
         else:
             return self.r2
+
+    # Coordenada onde o robo diz ter encontrado a caça
+    def validarCacas(self, x, y):
+        self.vX = x
+        self.vY = y
+
+    def getValidarCacas(self):
+        return self.vX, self.vY
+
 
     def setDBtoStatus(self, dadosDB):
         self.dados_DB = dadosDB

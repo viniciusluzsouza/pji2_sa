@@ -9,11 +9,11 @@ class Transmissor(Thread):
 
     def __init__(self, host):
         super(Transmissor, self).__init__()
-        self._exchange = 'SA_to_SA'
+        self._exchange = 'SA_to_SS'
 
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=str(host)))
         self.channel = self.connection.channel()
-        self.channel.exchange_declare(exchange=self._exchange, exchange_type='direct')
+        self.channel.exchange_declare(exchange=self._exchange, exchange_type='fanout')
 
     def run(self):
         while True:
@@ -24,6 +24,7 @@ class Transmissor(Thread):
             with compartilhados.transmitir_msg_lock:
                 msg = compartilhados.transmitir_msg
 
+                print("Transmitindo: ", msg)
                 if '_dir' in msg: msg.pop('_dir')
 
                 if '_robo' in msg:
