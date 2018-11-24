@@ -51,14 +51,16 @@ class Gerenciador():
     def _envia_msg_ui(self, msg):
         with compartilhados.transmitir_toUI_lock:
             compartilhados.transmitir_toUI = msg
-            compartilhados.transmitir_toUI.set()
+            compartilhados.transmitir_toUI_event.set()
 
     def init_thread_rede(self):
         def gerencia_msg_rede():
             while True:
                 # Espera alguma mensagem ...
-                compartilhados.solicita_gerente.wait()
 
+                print("Gerente ativo")
+                compartilhados.solicita_gerente.wait()
+                print("Executando gerente")
                 with compartilhados.gerente_msg_lock:
                     msg = deepcopy(compartilhados.gerente_msg)
 
@@ -79,9 +81,12 @@ class Gerenciador():
                         # Quando o Robo diz que está indo para tal lugar
                         # Implica-se que ele verificou a possibilidade dessa movimentacao
                         if cmd == MsgSStoSA.MovendoPara:
-                            self.status.atualizarRobo(msg['_robo'], msg['x'], msg['y'])
+                            self.status.atualizarPosicaoRobo(msg['_robo'], msg['x'], msg['y'])
                             # Avisa interface usuario
-                            msg = {"cmd": MsgAuditorToUI.AtualizarR1, 'x': msg['x'], 'y': msg['y']}
+                            if msg['_robo'] == self.status.getRoboA:
+                                msg = {"cmd": MsgAuditorToUI.AtualizarR1}
+                            else:
+                                msg = {"cmd": MsgAuditorToUI.AtualizarR2}
                             self._envia_msg_ui(msg)
 
                         elif cmd == MsgSStoSA.PosicaoAtual:
@@ -227,7 +232,7 @@ if __name__ == '__main__':
         cacasA = int(input("Cacas encontradas primeiro robo (int): "))
         cacasB = int(input("Cacas encontradas segundo robo (int): "))
     except:
-        print("Invalido")
+        print("Invalido")https://wiki.sj.ifsc.edu.br/wiki/index.php/PJI2-EngTel_(p%C3%A1gina)
         exit()
 
     gerente.salva_historico(roboA, cacasA, roboB, cacasB)
