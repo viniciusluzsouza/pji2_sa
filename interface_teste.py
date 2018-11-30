@@ -22,12 +22,16 @@ class Inter(Thread):
 
         print("========CONFIGURAÇÕES INICIAIS ===========")
 
-        roboA = input("Nome do robo 1: ")
-        x1 = input("Defina x inicial: ")
-        y1 = input("Defina y inicial: ")
-        roboB = input("Nome do robo 2: ")
-        x2 = input("Defina x inicial: ")
-        y2 = input("Defina y inicial: ")
+        try:
+            roboA = input("Nome do robo 1: ")
+            x1 = int(input("Defina x inicial: "))
+            y1 = int(input("Defina y inicial: "))
+            roboB = input("Nome do robo 2: ")
+            x2 = int(input("Defina x inicial: "))
+            y2 = int(input("Defina y inicial: "))
+        except Exception as e:
+            print("Valor inicial invalido")
+            exit()
 
         cacas = []
 
@@ -44,15 +48,15 @@ class Inter(Thread):
         self.status.definirPartida(roboA, x1, y1, roboB, x2, y2, cacas)
 
         # Seleciona o modo de Jogo
-        modo = int(input("Definir modo de jogo\n (1) Autonomo \n (2) Manual\n"))
+        modo = int(input("Definir modo de jogo\n (1) Manual \n (2) Automatico\n"))
         msg = {}
         if modo == 1:
-            msg = {'_robo': '', "cmd": MsgUItoAuditor.NovoJogo, "modo_jogo": 'autonomo', "cacas": cacas,
-                   'jogadorA': roboA, 'xA': x1, 'yA': y1, 'jogadorB': roboB, 'xB': x2, 'yB': y2}
+            msg = {'_robo': '', "cmd": MsgUItoAuditor.NovoJogo, "modo_jogo": 1, "cacas": cacas,
+                   'jogadorA': roboA, 'xA': x1, 'yA': y1, 'jogadorB': roboB, 'xB': x2, 'yB': y2, '_dir':'ui'}
 
         elif modo == 2:
-            msg = {'_dir': 'ui', '_robo': '', "cmd": MsgUItoAuditor.NovoJogo, "modo_jogo": 'manual', "cacas": cacas,
-                   'jogadorA': roboA, 'xA': x1, 'yA': y1, 'jogadorB': roboB, 'xB': x2, 'yB': y2}
+            msg = {'_robo': '', "cmd": MsgUItoAuditor.NovoJogo, "modo_jogo": 2, "cacas": cacas,
+                   'jogadorA': roboA, 'xA': x1, 'yA': y1, 'jogadorB': roboB, 'xB': x2, 'yB': y2, '_dir':'ui'}
 
         print(msg)
         # Envia para todos o modo de jogo
@@ -68,19 +72,22 @@ class Inter(Thread):
 
             with compartilhados.transmitir_toUI_lock:
                 msg = deepcopy(compartilhados.transmitir_toUI)
+                print("msg::: %s" % str(msg))
 
                 if msg['cmd'] == MsgAuditorToUI.AtualizarRobo:
-                    self.status.atualizarPosicaoRobo(msg['_robo'], msg['x'], msg['y'])
+                    # Ja esta sendo atualizado no robo, precisa atualizar aqui tambem?
+                    # self.status.atualizarPosicaoRobo(msg['robo'], msg['x'], msg['y'])
+                    pass
 
                 if msg['cmd'] == MsgAuditorToUI.ValidarCaca:
-                    print("ROBO: " + msg['_robo'] + " solicita validação de caça")
+                    print("ROBO: " + msg['robo'] + " solicita validação de caça")
                     print("Na posição: ", '(', msg['x'], ',', msg['y'], ')')
                     x = 0
                     y = 0
-                    if msg['_robo'] == status.getRoboA():
+                    if msg['robo'] == self.status.getRoboA():
                         x, y = self.status.getCoordRobo(status.getRoboA())
 
-                    elif msg['_robo'] == status.getRoboB():
+                    elif msg['robo'] == status.getRoboB():
                         x, y = self.status.getCoordRobo(status.getRoboB())
                     print("POSICAO DO ROBO: ", "(", x, ",", y, ")")
 
