@@ -198,16 +198,18 @@ class Gerenciador():
                                 # Retira a caça encontrada pelo robo
                                 if len(self.status.getCacas()) > 0:
                                     # Jogo segue, avisa a ui
-                                    msg = {"cmd": MsgSAtoSS.ValidacaoCaca, "_robo": msg['robo'], 'x': msg['x'],
-                                           'y': msg['y'], 'ack': 1}
+                                    cacas = self.status.getCacas()
+                                    print(cacas)
+                                    msg = {"cmd": MsgSAtoSS.ValidacaoCaca, "_robo": msg['_robo'], 'x': msg['x'],
+                                           'y': msg['y'], 'ack': 1, 'cacas': cacas}
                                     self._envia_msg_ss(msg)
 
                                 else:
                                     # Teve um vencedor, avisa a ui
-                                    msg = {"cmd": MsgAuditorToUI.DeclararVencedor, "_robo": msg['robo'], 'x': msg['x'],
+                                    msg = {"cmd": MsgAuditorToUI.DeclararVencedor, "_robo": msg['_robo'], 'x': msg['x'],
                                            'y': msg['y']}
                                     self._envia_msg_ui(msg)
-                                    msg = {"cmd": MsgSAtoSS.ValidacaoCaca, "_robo": msg['robo'], 'validacao': 1}
+                                    msg = {"cmd": MsgSAtoSS.ValidacaoCaca, "_robo": msg['_robo'], 'validacao': 1}
                                     self._envia_msg_ss(msg)
 
                             else:
