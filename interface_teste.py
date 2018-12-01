@@ -86,7 +86,7 @@ class Inter(Thread):
                     if msg['robo'] == self.status.getRoboA():
                         x, y = self.status.getCoordRobo(self.status.getRoboA())
 
-                    elif msg['robo'] == status.getRoboB():
+                    elif msg['robo'] == self.status.getRoboB():
                         x, y = self.status.getCoordRobo(self.status.getRoboB())
                     print("POSICAO DO ROBO: ", "(", x, ",", y, ")")
 
