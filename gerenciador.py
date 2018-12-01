@@ -49,13 +49,31 @@ class Gerenciador():
 
     def _envia_msg_ss(self, msg):
         with compartilhados.transmitir_msg_lock:
-            compartilhados.transmitir_msg = msg
+            compartilhados.transmitir_msg = deepcopy(msg)
             compartilhados.transmitir_event.set()
 
     def _envia_msg_ui(self, msg):
         with compartilhados.transmitir_toUI_lock:
             compartilhados.transmitir_toUI = msg
             compartilhados.transmitir_toUI_event.set()
+
+    def _gera_msg_novo_jogo(self, msg):
+        # Espera uma mensagem assim:
+        # {'_robo': '', "cmd": MsgSAtoSS.NovoJogo, "modo_jogo": 1, "cacas": cacas,
+        # 'jogadorA': roboA, 'xA': x1, 'yA': y1, 'jogadorB': roboB, 'xB': x2, 'yB': y2}
+        # retorna duas mensagens, uma para cada robo
+        msg1 = {"cmd": msg['cmd'], "modo_jogo": msg['modo_jogo'], "cacas": msg['cacas']}
+        msg2 = deepcopy(msg1)
+
+        msg1['_robo'] = deepcopy(msg['jogadorA'])
+        msg1['x'] = deepcopy(msg['xA'])
+        msg1['y'] = deepcopy(msg['yA'])
+
+        msg2['_robo'] = deepcopy(msg['jogadorB'])
+        msg2['x'] = deepcopy(msg['xB'])
+        msg2['y'] = deepcopy(msg['yB'])
+
+        return msg1, msg2
 
     def init_thread_rede(self):
         def gerencia_msg_rede():
@@ -70,7 +88,7 @@ class Gerenciador():
 
                     print("Lendo msg", msg)
                     if 'cmd' not in msg:
-                        solicita_gerente.clear()
+                        compartilhados.solicita_gerente.clear()
                         continue
 
                     cmd = msg['cmd']
@@ -86,33 +104,31 @@ class Gerenciador():
                         # Quando o Robo diz que está indo para tal lugar
                         # Implica-se que ele verificou a possibilidade dessa movimentacao
                         if cmd == MsgSStoSA.MovendoPara:
-                            self.status.atualizarPosicaoRobo(msg['_robo'], msg['x'], msg['y'])
+                            self.status.movendo(msg['x'], msg['y'])
                             # Avisa interface usuario
-                            if msg['_robo'] == self.status.getRoboA:
-                                msg = {"cmd": MsgAuditorToUI.AtualizarR1}
-                            else:
-                                msg = {"cmd": MsgAuditorToUI.AtualizarR2}
+                            msg["cmd"] = MsgAuditorToUI.Movendo
                             self._envia_msg_ui(msg)
 
                         elif cmd == MsgSStoSA.PosicaoAtual:
                             # Caso a posição do robo não seja igual aquela que consta no status, avise UI
-                            if not self.status.getCoordRobo(msg['_robo']) == msg['x'] and not self.status.getCoordRobo(
-                                    msg['_robo']) == msg['y']:
-                                self.status.atualizarPosicaoRobo(msg['_robo'], msg['x'], msg['y'])
-                                msg = {"cmd": MsgAuditorToUI.AtualizarR1, "_robo": msg['_robo'], 'x': msg['x'],
+                            if not self.status.getCoordRobo(msg['robo']) == msg['x'] and not self.status.getCoordRobo(
+                                    msg['robo']) == msg['y']:
+                                self.status.atualizarPosicaoRobo(msg['robo'], msg['x'], msg['y'])
+                                msg = {"cmd": MsgAuditorToUI.AtualizarRobo, "_robo": msg['robo'], 'x': msg['x'],
                                        'y': msg['y']}
                                 self._envia_msg_ui(msg)
 
 
                         elif cmd == MsgSStoSA.ValidaCaca:
-                            msg = {"cmd": MsgAuditorToUI.ValidarCaca, "_robo": msg['robo'], 'x': msg['x'],
+
+                            msg = {"cmd": MsgAuditorToUI.ValidarCaca, "robo": msg['robo'], 'x': msg['x'],
                                    'y': msg['y']}
                             self._envia_msg_ui(msg)
 
 
 
                         elif cmd == MsgSStoSA.ObstaculoEncontrado:
-                            msg = {"cmd": MsgAuditorToUI.Obstaculo, "_robo": msg['_robo']}
+                            msg = {"cmd": MsgAuditorToUI.Obstaculo, "robo": msg['robo']}
                             self._envia_msg_ui(msg)
                             # Avisa interface usuario
                             pass
@@ -176,28 +192,38 @@ class Gerenciador():
 
                                 self.status.atualizarCacas(msg['_robo'], msg['x'], msg['y'])
 
+                                # Alterações do vinicius
+                                #self.status.atualizarCacas(msg['robo'], {'x': msg['x'], 'y': msg['y']})
+
                                 # Retira a caça encontrada pelo robo
                                 if len(self.status.getCacas()) > 0:
                                     # Jogo segue, avisa a ui
-                                    msg = {"cmd": MsgSAtoSS.ValidacaoCaca, "_robo": msg['_robo'], 'x': msg['x'],
+                                    msg = {"cmd": MsgSAtoSS.ValidacaoCaca, "_robo": msg['robo'], 'x': msg['x'],
                                            'y': msg['y'], 'ack': 1}
                                     self._envia_msg_ss(msg)
 
                                 else:
                                     # Teve um vencedor, avisa a ui
-                                    msg = {"cmd": MsgAuditorToUI.DeclararVencedor, "_robo": msg['_robo'], 'x': msg['x'],
+                                    msg = {"cmd": MsgAuditorToUI.DeclararVencedor, "_robo": msg['robo'], 'x': msg['x'],
                                            'y': msg['y']}
                                     self._envia_msg_ui(msg)
-                                    msg = {"cmd": MsgSAtoSS.ValidacaoCaca, "_robo": msg['_robo'], 'validacao': 1}
+                                    msg = {"cmd": MsgSAtoSS.ValidacaoCaca, "_robo": msg['robo'], 'validacao': 1}
                                     self._envia_msg_ss(msg)
 
                             else:
                                 pass
 
                         elif cmd == MsgUItoAuditor.NovoJogo:
+                            # Espera uma mensagem assim:
+                            # {'_robo': '', "cmd": MsgUItoAuditor.NovoJogo, "modo_jogo": 1, "cacas": cacas,
+                            # 'jogadorA': roboA, 'xA': x1, 'yA': y1, 'jogadorB': roboB, 'xB': x2, 'yB': y2}
+                            import time
                             print("NOVO JOGO")
                             msg['cmd'] = MsgSAtoSS.NovoJogo
-                            self._envia_msg_ss(msg)
+                            msg1, msg2 = self._gera_msg_novo_jogo(msg)
+                            self._envia_msg_ss(msg1)
+                            time.sleep(0.1)
+                            self._envia_msg_ss(msg2)
 
                         else:
                             pass

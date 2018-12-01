@@ -2,6 +2,7 @@ import pika
 import json
 from threading import Thread, Event, Lock
 import compartilhados
+from copy import deepcopy
 
 
 class Transmissor(Thread):
@@ -13,7 +14,7 @@ class Transmissor(Thread):
 
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=str(host)))
         self.channel = self.connection.channel()
-        self.channel.exchange_declare(exchange=self._exchange, exchange_type='fanout')
+        self.channel.exchange_declare(exchange=self._exchange, exchange_type='direct')
 
     def run(self):
         while True:
@@ -22,18 +23,18 @@ class Transmissor(Thread):
 
             # Bloqueia enquanto a mensagem e enviada
             with compartilhados.transmitir_msg_lock:
-                msg = compartilhados.transmitir_msg
+                msg = deepcopy(compartilhados.transmitir_msg)
 
-                print("Transmitindo: ", msg)
                 if '_dir' in msg: msg.pop('_dir')
 
                 if '_robo' in msg:
                     routing_key = msg['_robo']
-                    msg.pop('_robo')
+                    # msg.pop('_robo')
 
                     msg_prop = None
                     if '_ttl' in msg:
-                        msg_prop = pika.BasicProperties(expiration=str(msg['_ttl']))
+                        ttl = msg['_ttl'] * 1000
+                        msg_prop = pika.BasicProperties(expiration=str(ttl))
                         msg.pop('_ttl')
 
                     print("Transmitindo: %s" % str(msg))
