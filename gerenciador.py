@@ -68,6 +68,7 @@ class Gerenciador():
                 with compartilhados.gerente_msg_lock:
                     msg = deepcopy(compartilhados.gerente_msg)
 
+                    print("Lendo msg", msg)
                     if 'cmd' not in msg:
                         solicita_gerente.clear()
                         continue
@@ -104,7 +105,7 @@ class Gerenciador():
 
 
                         elif cmd == MsgSStoSA.ValidaCaca:
-                            msg = {"cmd": MsgAuditorToUI.ValidarCaca, "_robo": msg['_robo'], 'x': msg['x'],
+                            msg = {"cmd": MsgAuditorToUI.ValidarCaca, "_robo": msg['robo'], 'x': msg['x'],
                                    'y': msg['y']}
                             self._envia_msg_ui(msg)
 
@@ -173,7 +174,7 @@ class Gerenciador():
                         elif cmd == MsgUItoAuditor.ValidarCaca:
                             if msg['validacao'] == 1:
 
-                                self.status.atualizarCacas(msg['_robo'], {'x': msg['x'], 'y': msg['y']})
+                                self.status.atualizarCacas(msg['_robo'], msg['x'], msg['y'])
 
                                 # Retira a caça encontrada pelo robo
                                 if len(self.status.getCacas()) > 0:

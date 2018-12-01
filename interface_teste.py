@@ -1,5 +1,3 @@
-from gerenciador import *
-from status import *
 import compartilhados
 from copy import deepcopy
 from mensagens_auditor import *
@@ -47,7 +45,7 @@ class Inter(Thread):
         modo = int(input("Definir modo de jogo\n (1) Autonomo \n (2) Manual\n"))
         msg = {}
         if modo == 1:
-            msg = {'_robo': '', "cmd": MsgUItoAuditor.NovoJogo, "modo_jogo": 'autonomo', "cacas": cacas,
+            msg = {'_dir': 'ui', '_robo': '', "cmd": MsgUItoAuditor.NovoJogo, "modo_jogo": 'autonomo', "cacas": cacas,
                    'jogadorA': roboA, 'xA': x1, 'yA': y1, 'jogadorB': roboB, 'xB': x2, 'yB': y2}
 
         elif modo == 2:
@@ -77,17 +75,23 @@ class Inter(Thread):
                     print("Na posição: ", '(', msg['x'], ',', msg['y'], ')')
                     x = 0
                     y = 0
-                    if msg['_robo'] == status.getRoboA():
-                        x, y = self.status.getCoordRobo(status.getRoboA())
+                    if msg['_robo'] == self.status.getRoboA():
+                        x, y = self.status.getCoordRobo(self.status.getRoboA())
 
-                    elif msg['_robo'] == status.getRoboB():
-                        x, y = self.status.getCoordRobo(status.getRoboB())
+                    elif msg['_robo'] == self.status.getRoboB():
+                        x, y = self.status.getCoordRobo(self.status.getRoboB())
                     print("POSICAO DO ROBO: ", "(", x, ",", y, ")")
 
-                    v = input("VALIDAR?\n(s) SIM\n(n)NÃO\n")
-                    if v == 's':
-                        msg = {'_dir': 'ui', 'cmd': MsgUItoAuditor.ValidarCaca, 'validacao': 1, 'x': msg['x'], 'y': msg['y']}
-                        self.avisar_gerenciador(msg)
+
+                    while True:
+                        v = input("VALIDAR?\n(s) SIM\n(n) NÃO\n")
+                        if v == 's':
+                            msg = {'_robo': msg['_robo'], '_dir': 'ui', 'cmd': MsgUItoAuditor.ValidarCaca, 'validacao': 1, 'x': msg['x'], 'y': msg['y']}
+                            self.avisar_gerenciador(msg)
+                            break
+
+                        else:
+                            print("Comando invalido")
 
 
 

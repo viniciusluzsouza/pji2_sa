@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="100ae28f-1dc2-4a32-b8af-35977751fdc3" name="Default Changelist" comment="" />
+    <list default="true" id="100ae28f-1dc2-4a32-b8af-35977751fdc3" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gerenciador.py" beforeDir="false" afterPath="$PROJECT_DIR$/gerenciador.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface_teste.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface_teste.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -9,7 +13,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/pji2_sa$principal.coverage" NAME="principal Coverage Results" MODIFIED="1543083347528" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/pji2_sa$principal.coverage" NAME="principal Coverage Results" MODIFIED="1543257657158" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/pji2_sa$testmag.coverage" NAME="testmag Coverage Results" MODIFIED="1542409500424" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/pji2_sa$status.coverage" NAME="status Coverage Results" MODIFIED="1542393305272" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/pji2_sa$gerenciador.coverage" NAME="gerenciador Coverage Results" MODIFIED="1542421651310" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -38,14 +42,16 @@
     <session id="-428974186">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="6" />
+          <entry key="project.closed" value="8" />
           <entry key="project.open.time.0" value="2" />
-          <entry key="project.open.time.1" value="2" />
+          <entry key="project.open.time.1" value="3" />
           <entry key="project.open.time.2" value="1" />
-          <entry key="project.open.time.6" value="2" />
+          <entry key="project.open.time.4" value="1" />
+          <entry key="project.open.time.6" value="4" />
           <entry key="project.open.time.7" value="1" />
           <entry key="project.open.time.8" value="2" />
-          <entry key="project.opened" value="10" />
+          <entry key="project.open.time.9" value="1" />
+          <entry key="project.opened" value="15" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -61,13 +67,13 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="19" />
-          <entry key="py" value="9468" />
+          <entry key="py" value="9589" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="19" />
-          <entry key="Python" value="9468" />
+          <entry key="Python" value="9589" />
         </counts>
       </usages-collector>
     </session>
@@ -89,12 +95,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/interface_teste.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="29" column="40" selection-start-line="29" selection-start-column="40" selection-end-line="29" selection-end-column="40" />
+            <state relative-caret-position="84">
+              <caret line="47" column="33" selection-start-line="47" selection-start-column="33" selection-end-line="47" selection-end-column="33" />
               <folding>
-                <element signature="e#0#25#0" expanded="true" />
-                <marker date="1543083067447" expanded="true" signature="191:286" ph="..." />
-                <marker date="1543083067447" expanded="true" signature="485:495" ph="..." />
+                <marker date="1543621586775" expanded="true" signature="144:239" ph="..." />
+                <marker date="1543621586775" expanded="true" signature="438:448" ph="..." />
               </folding>
             </state>
           </provider>
@@ -112,8 +117,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gerenciador.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2355">
-              <caret line="165" column="31" selection-start-line="165" selection-start-column="31" selection-end-line="165" selection-end-column="31" />
+            <state relative-caret-position="2019">
+              <caret line="197" column="44" selection-start-line="197" selection-start-column="40" selection-end-line="197" selection-end-column="44" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
               </folding>
@@ -170,8 +175,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/status.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="930">
-              <caret line="62" column="21" selection-start-line="62" selection-start-column="21" selection-end-line="62" selection-end-column="21" />
+            <state relative-caret-position="1320">
+              <caret line="88" column="11" selection-start-line="88" selection-start-column="6" selection-end-line="88" selection-end-column="11" />
               <folding>
                 <marker date="1543077702055" expanded="true" signature="1057:1113" ph="..." />
                 <marker date="1543077702055" expanded="true" signature="1855:1926" ph="..." />
@@ -185,8 +190,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/compartilhados.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="17" column="24" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="24" />
+            <state>
+              <caret selection-end-line="9" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -207,6 +212,8 @@
       <find>AtualizarR</find>
       <find>AtualizaR</find>
       <find>cacas</find>
+      <find>status</find>
+      <find>atual</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -226,9 +233,9 @@
         <option value="$PROJECT_DIR$/receptor.py" />
         <option value="$PROJECT_DIR$/mensagens_auditor.py" />
         <option value="$PROJECT_DIR$/principal.py" />
+        <option value="$PROJECT_DIR$/transmissor.py" />
         <option value="$PROJECT_DIR$/gerenciador.py" />
         <option value="$PROJECT_DIR$/interface_teste.py" />
-        <option value="$PROJECT_DIR$/transmissor.py" />
       </list>
     </option>
   </component>
@@ -239,10 +246,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="683" />
-    <option name="y" value="25" />
-    <option name="width" value="683" />
-    <option name="height" value="708" />
+    <option name="y" value="-2" />
+    <option name="width" value="1440" />
+    <option name="height" value="902" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -427,12 +433,12 @@
     <frame x="0" y="25" width="1366" height="708" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27121213" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3213763" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49545455" weight="0.21799308" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49545455" weight="0.46712804" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -516,16 +522,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gerenciador.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2355">
-          <caret line="165" column="31" selection-start-line="165" selection-start-column="31" selection-end-line="165" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mensagens_auditor.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="810">
@@ -566,8 +562,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/status.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="930">
-          <caret line="62" column="21" selection-start-line="62" selection-start-column="21" selection-end-line="62" selection-end-column="21" />
+        <state relative-caret-position="1320">
+          <caret line="88" column="11" selection-start-line="88" selection-start-column="6" selection-end-line="88" selection-end-column="11" />
           <folding>
             <marker date="1543077702055" expanded="true" signature="1057:1113" ph="..." />
             <marker date="1543077702055" expanded="true" signature="1855:1926" ph="..." />
@@ -579,19 +575,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/compartilhados.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="24" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="24" />
+        <state>
+          <caret selection-end-line="9" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gerenciador.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2019">
+          <caret line="197" column="44" selection-start-line="197" selection-start-column="40" selection-end-line="197" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/interface_teste.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="29" column="40" selection-start-line="29" selection-start-column="40" selection-end-line="29" selection-end-column="40" />
+        <state relative-caret-position="84">
+          <caret line="47" column="33" selection-start-line="47" selection-start-column="33" selection-end-line="47" selection-end-column="33" />
           <folding>
-            <element signature="e#0#25#0" expanded="true" />
-            <marker date="1543083067447" expanded="true" signature="191:286" ph="..." />
-            <marker date="1543083067447" expanded="true" signature="485:495" ph="..." />
+            <marker date="1543621586775" expanded="true" signature="144:239" ph="..." />
+            <marker date="1543621586775" expanded="true" signature="438:448" ph="..." />
           </folding>
         </state>
       </provider>
