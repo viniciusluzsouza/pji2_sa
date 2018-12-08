@@ -387,7 +387,7 @@ class InterfaceGrafica:
         dados.mainloop()
         mapa.mainloop()
 
-        #self.atualizaPartida()
+        self.atualizaPartida()
 
     def desenhaMapa(self):
 
