@@ -4,9 +4,9 @@ from copy import deepcopy
 from time import sleep
 from tkinter import *
 from random import randint
-from SA.mensagens_auditor import *
-from SA import compartilhados
-from SA.coordenada import *
+from mensagens_auditor import *
+import compartilhados
+from coordenada import *
 
 class InterfaceGrafica:
 

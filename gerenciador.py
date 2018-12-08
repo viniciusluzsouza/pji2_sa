@@ -6,8 +6,8 @@ from receptor import *
 from copy import deepcopy
 import compartilhados
 from status import *
-from interface_teste import *
-
+#from interface_teste import *
+from Interface import *
 
 class Gerenciador():
     """Gerenciador do SA. Trata mensagens vindas de qualquer lugar."""
@@ -30,7 +30,7 @@ class Gerenciador():
         self.receptor = Receptor("localhost")
         self.receptor.start()
 
-        self.interface = Inter(status)
+        self.interface = InterfaceGrafica(status)
         self.interface.start()
 
         super(Gerenciador, self).__init__()
@@ -174,6 +174,11 @@ class Gerenciador():
                             self.salva_historico(self.status.getRoboA(), self.status.getCacaRoboA(),
                                                  self.status.getRoboB(), self.status.getCacaRoboB())
 
+                            import time
+                            print("FIM DE JOGO")
+                            msg['cmd'] = MsgSAtoSS.FimJogo
+                            exit(-1)
+
                         elif cmd == MsgUItoAuditor.CadastrarRobo:
                             self.cadastra_robo(msg['_robo'], msg['cor'], msg['mac'])
 
@@ -205,6 +210,7 @@ class Gerenciador():
 
                             self._envia_msg_ss(msg1)
 
+
                         elif cmd == MsgUItoAuditor.ValidarCaca:
                             if msg['validacao'] == 1:
 
@@ -227,8 +233,8 @@ class Gerenciador():
                                     msg = {"cmd": MsgAuditorToUI.DeclararVencedor, "_robo": msg['_robo'], 'x': msg['x'],
                                            'y': msg['y']}
                                     self._envia_msg_ui(msg)
-                                    msg = {"cmd": MsgSAtoSS.ValidacaoCaca, "_robo": msg['_robo'], 'validacao': 1}
-                                    self._envia_msg_ss(msg)
+                                    #msg = {"cmd": MsgSAtoSS.ValidacaoCaca, "_robo": msg['_robo'], 'ack': 1}
+                                    #self._envia_msg_ss(msg)
 
                             else:
                                 pass
