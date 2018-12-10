@@ -6,8 +6,8 @@ from receptor import *
 from copy import deepcopy
 import compartilhados
 from status import *
-#from interface_teste import *
-from Interface import *
+from interface_teste import *
+#from Interface import *
 
 class Gerenciador():
     """Gerenciador do SA. Trata mensagens vindas de qualquer lugar."""
@@ -30,8 +30,17 @@ class Gerenciador():
         self.receptor = Receptor("localhost")
         self.receptor.start()
 
-        self.interface = InterfaceGrafica(status)
-        self.interface.start()
+        ui = Inter(status)
+        ui.start()
+
+        #ui = InterfaceGrafica(status)
+        #ui.start()
+        #a = Thread(target=ui.atualizaPartida)
+        #a.start()
+
+
+        #ui = Thread(target=InterfaceGrafica(status))
+        #ui.start()
 
         super(Gerenciador, self).__init__()
 
@@ -78,10 +87,10 @@ class Gerenciador():
     def init_thread_rede(self):
         def gerencia_msg_rede():
 
+            print("Gerente ativo")
             while True:
                 # Espera alguma mensagem ...
 
-                #print("Gerente ativo")
                 compartilhados.solicita_gerente.wait()
                 print("Executando gerente")
                 with compartilhados.gerente_msg_lock:
@@ -171,8 +180,8 @@ class Gerenciador():
                         cmd = msg['cmd']
 
                         if cmd == MsgUItoAuditor.FimdeJogo:
-                            self.salva_historico(self.status.getRoboA(), self.status.getCacaRoboA(),
-                                                 self.status.getRoboB(), self.status.getCacaRoboB())
+                            #self.salva_historico(self.status.getRoboA(), self.status.getCacaRoboA(),
+                            #                     self.status.getRoboB(), self.status.getCacaRoboB())
 
                             import time
                             print("FIM DE JOGO")
@@ -246,6 +255,7 @@ class Gerenciador():
                             import time
                             print("NOVO JOGO")
                             msg['cmd'] = MsgSAtoSS.NovoJogo
+                            msg['modo_jogo'] = int(msg['modo_jogo'])
                             msg1, msg2 = self._gera_msg_novo_jogo(msg)
                             self._envia_msg_ss(msg1)
                             time.sleep(0.1)
@@ -273,11 +283,7 @@ class Gerenciador():
         return
 
 
-if __name__ == '__main__':
-    print("Inicializando ...")
-    status = Status()
-    gerente = Gerenciador(status)
-    gerente.init_thread_rede()
+
 '''
 ### TESTE:
 if __name__ == '__main__':

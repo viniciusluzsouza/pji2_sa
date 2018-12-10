@@ -7,12 +7,16 @@ from random import randint
 from mensagens_auditor import *
 import compartilhados
 from coordenada import *
+from threading import Thread
 
-class InterfaceGrafica:
+class InterfaceGrafica(Thread):
 
     def __init__(self, status):
-        compartilhados.init()
+        #compartilhados.init()
         self.status = status
+        Thread.__init__(self)
+
+    def run(self):
         inicia = Tk()
         inicia.title("Bem vindo")
         self.fontePadrao = ("Arial", "40")
@@ -289,7 +293,7 @@ class InterfaceGrafica:
         self.status.definirPartida(self.robo1, self.posX1, self.posY1, self.robo2, self.posY1, self.posY2, self.cacas)
 
         self.avisar_gerenciador(msg)
-        self.mensagem['foreground'] = 'darkgreen'
+        self.mensagem['foreground'] = 'green'
         self.mensagem["text"] = "Partida pronta"
 
         # Tratar se estiver nulo
@@ -304,6 +308,7 @@ class InterfaceGrafica:
 
         # inicia partida
         self.partida()
+
 
     def partida(self):
         dados = Tk()
@@ -381,13 +386,17 @@ class InterfaceGrafica:
         self.R2 = Coordenada(self.posX2, self.posY2)
         self.R2 = self.transformaCoord(self.R2)
 
-        self.desenhaMapa()
-        self.desenhaInfo()
+        #self.desenhaMapa()
+        #self.desenhaInfo()
 
-        dados.mainloop()
-        mapa.mainloop()
+        #self.atualizaPartida()
 
-        self.atualizaPartida()
+        #a = Thread(target=self.atualizaPartida())
+        #a.start()
+        #dados.mainloop()
+        #mapa.mainloop()
+
+
 
     def desenhaMapa(self):
 
@@ -655,11 +664,34 @@ class InterfaceGrafica:
     def atualizaPartida(self):
         while True:
 
+            self.desenhaMapa()
+            self.desenhaInfo()
+
             compartilhados.transmitir_toUI_event.wait()
+
 
             with compartilhados.transmitir_toUI_lock:
                 msg = deepcopy(compartilhados.transmitir_toUI)
                 print("msg::: %s" % str(msg))
+
+                if msg['cmd'] == MsgAuditorToUI.Movendo:
+                    if msg['robo'] == self.status.getRoboA:
+                        x, y = self.status.getCoordRobo(self.status.getRoboA())
+                        self.posX1 = x
+                        self.posY1 = y
+                        self.R1 = Coordenada(self.posX1, self.posY1)
+                        self.R1 = self.transformaCoord(self.R1)
+                        self.desenhaMapa()
+                        self.desenhaInfo()
+
+                    else:
+                        x, y = self.status.getCoordRobo(self.status.getRoboA())
+                        self.posX1 = x
+                        self.posY1 = y
+                        self.R1 = Coordenada(self.posX1, self.posY1)
+                        self.R1 = self.transformaCoord(self.R1)
+                        #self.desenhaMapa()
+                        #self.desenhaInfo()
 
                 if msg['cmd'] == MsgAuditorToUI.AtualizarRobo:
                     # Ja esta sendo atualizado no robo, precisa atualizar aqui tambem?
