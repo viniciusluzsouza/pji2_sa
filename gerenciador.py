@@ -124,8 +124,25 @@ class Gerenciador():
                             #if not self.status.getCoordRobo(msg['robo']) == msg['x'] and not self.status.getCoordRobo(
                             #       msg['robo']) == msg['y']:
                             self.status.atualizarPosicaoRobo(msg['robo'], msg['x'], msg['y'])
-                            msg = {"cmd": MsgAuditorToUI.AtualizarRobo, "_robo": msg['robo']}
-                            self._envia_msg_ui(msg)
+                            msg1 = {"cmd": MsgAuditorToUI.AtualizarRobo, "_robo": msg['robo']}
+                            self._envia_msg_ui(msg1)
+
+                            cacas = self.status.getCacas()
+                            #robo = msg['robo']
+                            #msg = {}
+                            print("RECEBENDO MENSAGEM POSATUAL")
+                            msg2 = {}
+                            if msg['robo'] == self.status.getRoboA():
+                                x, y = self.status.getCoordRobo(self.status.getRoboB())
+                                msg2 = {'cmd': MsgSAtoSS.AtualizaMapa, '_robo': msg['robo'],
+                                       'cacas': cacas, 'x': x, 'y': y}
+
+                            elif msg['robo'] == self.status.getRoboB():
+                                x, y = self.status.getCoordRobo(self.status.getRoboA())
+                                msg2 = {'cmd': MsgSAtoSS.AtualizaMapa, '_robo': msg['robo'],
+                                       'cacas': cacas, 'x': x, 'y': y}
+
+                            self._envia_msg_ss(msg2)
 
 
                         elif cmd == MsgSStoSA.ValidaCaca:
@@ -238,6 +255,16 @@ class Gerenciador():
                                     self._envia_msg_ss(msg)
 
                                 else:
+                                    import time
+                                    # Primeiro envia validacao
+                                    cacas = self.status.getCacas()
+                                    print(cacas)
+                                    msg = {"cmd": MsgSAtoSS.ValidacaoCaca, "_robo": msg['_robo'], 'x': msg['x'],
+                                           'y': msg['y'], 'ack': 1, 'cacas': cacas}
+                                    self._envia_msg_ss(msg)
+
+                                    time.sleep(0.1)
+
                                     # Teve um vencedor, avisa a ui
                                     msg = {"cmd": MsgAuditorToUI.DeclararVencedor, "_robo": msg['_robo'], 'x': msg['x'],
                                            'y': msg['y']}

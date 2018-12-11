@@ -77,8 +77,8 @@ class Inter(Thread):
 
                     x, y = self.status.getCoordRobo(msg['_robo'])
                     print("Robo", msg['_robo'], "Posicao atual (" + str(x) +","+ str(y)+")")
-                    msg = {'_dir': 'ui', 'cmd': MsgUItoAuditor.AtualizaMapa, '_robo': msg['_robo']}
-                    self.avisar_gerenciador(msg)
+                    # msg = {'_dir': 'ui', 'cmd': MsgUItoAuditor.AtualizaMapa, '_robo': msg['_robo']}
+                    # self.avisar_gerenciador(msg)
 
 
                 elif msg['cmd'] == MsgAuditorToUI.DeclararVencedor:
