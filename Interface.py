@@ -132,7 +132,8 @@ class InterfaceGrafica(Thread):
         # TODO validação das informações
         # TODO TRATAR ANTES DE ENVIAR PARA O BANCO DE DADOS
 
-        msg = {'_robo': robo, 'cor': cor, 'mac': mac, '_dir': 'ui'}
+        msg = {'cmd': MsgUItoAuditor.CadastrarRobo,
+        '_robo': robo, 'cor': cor, 'mac': mac, '_dir': 'ui'}
         self.avisar_gerenciador(msg)
         self.mensagem['foreground'] = 'darkgreen'
         self.mensagem["text"] = "Cadastrado com sucesso"
@@ -311,10 +312,10 @@ class InterfaceGrafica(Thread):
 
 
     def partida(self):
-        dados = Tk()
-        mapa = Tk()
-        dados.title("Informações")
-        mapa.title("Mapa")
+        self.dados = Tk()
+        self.mapa = Tk()
+        self.dados.title("Informações")
+        self.mapa.title("Mapa")
         self.fontePadrao = ("Arial", "40")
         self.fonteMenor = ("Arial", "30")
         self.fonteMapa = ('Helvetica 12 bold')
@@ -355,13 +356,13 @@ class InterfaceGrafica(Thread):
         self.backgroudMapa00 = "yellow"
         self.backgroudMapa66 = "blue"
 
-        self.container1 = Frame(mapa)
-        self.container2 = Frame(dados)
-        self.container3 = Frame(dados)
-        self.container4 = Frame(dados)
-        self.container5 = Frame(dados)
-        self.container6 = Frame(dados)
-        self.container7 = Frame(mapa)
+        self.container1 = Frame(self.mapa)
+        self.container2 = Frame(self.dados)
+        self.container3 = Frame(self.dados)
+        self.container4 = Frame(self.dados)
+        self.container5 = Frame(self.dados)
+        self.container6 = Frame(self.dados)
+        self.container7 = Frame(self.mapa)
 
         # adicionando os containers
         self.container1.pack()
@@ -373,7 +374,7 @@ class InterfaceGrafica(Thread):
         self.container7.pack()
 
         # ---------- MAPA ----------
-        mapa.geometry("1000x700")
+        self.mapa.geometry("1000x700")
         # mapa.configure(background="Gray")
 
         self.espaco = Label(self.container1, text='Mapa', font=self.fontePadrao, pady="50").pack()
@@ -386,10 +387,19 @@ class InterfaceGrafica(Thread):
         self.R2 = Coordenada(self.posX2, self.posY2)
         self.R2 = self.transformaCoord(self.R2)
 
-        #self.desenhaMapa()
-        #self.desenhaInfo()
+        # self.desenhaMapa()
+        # self.desenhaInfo()
 
-        #self.atualizaPartida()
+        # print("DADOS MAINLOOP")
+        # self.dados.update_idletasks()
+        # self.dados.update()
+
+        # print("MAPA MAINLOOP")
+        # self.mapa.update_idletasks()
+        # self.mapa.update()
+
+        print("ATUALIZA MAINLOOP")
+        self.atualizaPartida()
 
         #a = Thread(target=self.atualizaPartida())
         #a.start()
@@ -399,6 +409,8 @@ class InterfaceGrafica(Thread):
 
 
     def desenhaMapa(self):
+
+        print("DESENHANDO MAPA ...")
 
         #print("(%d, %d)" % (listaCacas[0].getX(), listaCacas[0].getY()))
         #print("R1 (%d, %d)" % (posR1.getX(), posR1.getY()))
@@ -491,6 +503,8 @@ class InterfaceGrafica(Thread):
 
 
     def desenhaInfo(self):
+        print("DESENHANDO INFO ...")
+
         # --------------------- DADOS INICIAIS DE CADA ROBÔ ---------------------
         self.pos1 = "(%d, %d)" % (self.posX1, self.posY1)
         self.pos2 = "(%d, %d)" % (self.posX2, self.posY2)
@@ -662,10 +676,22 @@ class InterfaceGrafica(Thread):
         self.textoParadaR2.set("")
 
     def atualizaPartida(self):
+        print("INICIANDO ATUALIZA ... ")
+
+        compartilhados.transmitir_toUI_event.clear()
+        print("INICIANDO ATUALIZA WHILE ")
         while True:
 
             self.desenhaMapa()
             self.desenhaInfo()
+
+            print("DADOS ATUALIZA")
+            self.dados.update_idletasks()
+            self.dados.update()
+
+            print("MAPA ATUALIZA")
+            self.mapa.update_idletasks()
+            self.mapa.update()
 
             compartilhados.transmitir_toUI_event.wait()
 
@@ -688,8 +714,8 @@ class InterfaceGrafica(Thread):
                         x, y = self.status.getCoordRobo(self.status.getRoboA())
                         self.posX1 = x
                         self.posY1 = y
-                        self.R1 = Coordenada(self.posX1, self.posY1)
-                        self.R1 = self.transformaCoord(self.R1)
+                        self.R2 = Coordenada(self.posX2, self.posY2)
+                        self.R2 = self.transformaCoord(self.R2)
                         #self.desenhaMapa()
                         #self.desenhaInfo()
 
@@ -729,7 +755,7 @@ class InterfaceGrafica(Thread):
 
                     # print("POSICAO DO ROBO: ", "(", x, ",", y, ")")
                     while True:
-                        v = self.validarCaca()
+                        v = self.validarCaca(msg['robo'], msg['x'], msg['y'])
                         if v == 's':
                             self.status.atualizarCacas(msg['robo'], msg['x'], msg['y'])
                             msg = {'_robo': msg['robo'], '_dir': 'ui', 'cmd': MsgUItoAuditor.ValidarCaca,
